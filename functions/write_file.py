@@ -8,9 +8,7 @@ def write_file(working_directory: str, filepath: str, content: str) -> str:
         dir_bounds = os.path.abspath(working_directory)
         target_path = os.path.normpath(os.path.join(dir_bounds, filepath))
         target_dir = os.path.dirname(target_path)
-        if (result := is_valid_path(dir_bounds, target_dir)) and result[1]:
-            print(result[0])
-        else:
+        if not ((result := is_valid_path(dir_bounds, target_dir)) and result[1]):
             # print(f"Failed Dir: {target_dir} | Dir Bounds: {dir_bounds}")
             return f"Error: Cannot write to \"{filepath}\" as it is outside the permitted working directory"
     except:
@@ -35,3 +33,24 @@ def write_file(working_directory: str, filepath: str, content: str) -> str:
     return f"Successfully wrote to file \"{filepath}\" ({len(content)} characters written)"
 
 
+# Schema for the get_file_content function
+schema_write_file = {
+	"type":"function",
+	"function": {
+		"name":"write_file",
+		"description":"Write or overwrite the contents of a file with the provided string. If the file does not exist, it will be created along with any necessary parent directories.",
+		"parameters": {
+			"type": "object",
+			"properties": {
+				"filepath": {
+					"type":"string",
+					"description": "Directory path to the file to read, relative to the working directory"
+				},
+                "content": {
+                    "type":"string",
+                    "description": "Content to write to the file"   
+                },
+			},
+		},
+	},
+}
